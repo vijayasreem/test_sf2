@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Trigger xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>48.0</apiVersion>
+    <description>Update Date_Received__c and remove characters other than alphabets in Provider_Name__c</description>
+    <isActive>true</isActive>
+    <name>CaseTrigger</name>
+    <triggerSource>onBefore</triggerSource>
+    <type>Case</type>
+    <length>-1</length>
+    <unDeployed>false</unDeployed>
+    <content>trigger CaseTrigger on Case (before insert) {
+
+   for(Case c : Trigger.new){
+       
+       //update Date_Received__c to today
+       c.Date_Received__c = System.today();
+       
+       //remove characters other than alphabets and short the lenght of string to 50
+       if(c.Provider_Name__c != null){
+           String newName = c.Provider_Name__c.replaceAll('[^A-Za-z0-9 ]', '');
+           c.Provider_Name__c = newName.substring(0, Math.min(50, newName.length()));
+       }
+   }
+}
+    </content>
+</Trigger>
